@@ -1,6 +1,7 @@
--- [[ NURSE MODULE: SELF-SUSTAIN v10.2 ]]
--- Smart usage of Potions, Healthstones, and Bandages.
--- Update: Potion Threshold set to < 80% HP.
+-- [[ BANNION NURSE v10.2 - MODULE ]]
+-- Smart Sustain: Potions, Stones, Bandages (<80% HP Threshold)
+
+local NurseVersion = "|cff00ff00[Bannion Nurse v10.2 Loaded]|r"
 
 local NurseItems = {
     Potions = { 
@@ -18,7 +19,8 @@ local NurseItems = {
     }
 }
 
-local function Bannion_UseItem(name)
+-- Local Helper: Use Item by Name
+local function Bannion_Nurse_UseItem(name)
     for bag = 0, 4 do
         for slot = 1, GetContainerNumSlots(bag) do
             local link = GetContainerItemLink(bag, slot)
@@ -34,6 +36,23 @@ local function Bannion_UseItem(name)
     return false
 end
 
+-- Local Helper: Check Spell Ready (Safe version for Nurse)
+local function Bannion_Nurse_SpellReady(spellName)
+    -- Tries to use global Bannion_Ready if available, else falls back to simple check
+    if Bannion_Ready then return Bannion_Ready(spellName) end
+    
+    -- Local fallback if Core is missing
+    local id = nil
+    for i = 1, 200 do
+        local n = GetSpellName(i, "spell")
+        if not n then break end
+        if n == spellName then id = i; break end
+    end
+    if not id then return false end
+    local start, duration = GetSpellCooldown(id, "spell")
+    return start == 0
+end
+
 function BannionNurse()
     local hp = UnitHealth("player")
     local max = UnitHealthMax("player")
@@ -44,48 +63,54 @@ function BannionNurse()
 
     -- 1. COMBAT MODE (Potions & Stones)
     if combat then
-        -- Safety Check: Don't waste potions if HP is high (> 80%)
+        -- Threshold v10.2: < 80% HP
         if pct > 80 then return end
         
-        -- Priority A: Healthstone (Free / Shared CD)
+        -- Priority A: Stones (Free/Shared)
         for _, item in pairs(NurseItems.Stones) do
-            if Bannion_UseItem(item) then return end
+            if Bannion_Nurse_UseItem(item) then return end
         end
 
-        -- Priority B: Potions (Gold Cost)
+        -- Priority B: Potions (Costly)
         for _, item in pairs(NurseItems.Potions) do
-            if Bannion_UseItem(item) then return end
+            if Bannion_Nurse_UseItem(item) then return end
         end
         
-        -- Priority C: Desperate Racial (Undead Cannibalize)
+        -- Priority C: Racial
         local race = UnitRace("player")
-        if race == "Undead" and pct < 30 then
-            if not Bannion_Ready("Cannibalize") then return end
-            _Cast("Cannibalize")
+        if race == "Undead" and pct < 40 then
+            if Bannion_Nurse_SpellReady("Cannibalize") then
+                CastSpellByName("Cannibalize")
+            end
         end
         
     -- 2. REST MODE (Bandages)
     else
-        -- Don't bandage if nearly full (> 90%)
+        -- Don't waste if nearly full
         if pct > 90 then return end
         
-        -- Check for "Recently Bandaged" Debuff to avoid error spam
+        -- Check Debuff
         for i=1,16 do 
             local t = UnitDebuff("player", i)
             if t and string.find(t, "Bandage") then 
-                DEFAULT_CHAT_FRAME:AddMessage("|cffff0000[Bannion]|r Cannot Bandage: Debuff Active!")
+                DEFAULT_CHAT_FRAME:AddMessage("|cffff0000[Nurse]|r Cannot Bandage: Debuff Active!")
                 return 
             end 
         end
         
-        -- Use Best Bandage
+        -- Apply Bandage
         for _, item in pairs(NurseItems.Bandages) do
-            if Bannion_UseItem(item) then 
-                DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Bannion]|r Applying " .. item .. "...")
+            if Bannion_Nurse_UseItem(item) then 
+                DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Nurse]|r Applying " .. item .. "...")
                 return 
             end
         end
     end
 end
+
+-- Init Message
+local loadFrame = CreateFrame("Frame")
+loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
+loadFrame:SetScript("OnEvent", function() DEFAULT_CHAT_FRAME:AddMessage(NurseVersion) end)
 
 SLASH_BNURSE1 = "/BNurse"; SlashCmdList["BNURSE"] = BannionNurse
