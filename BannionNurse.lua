@@ -1,5 +1,5 @@
 -- [[ BANNION NURSE v10.2 - MODULE ]]
--- Smart Sustain: Potions, Stones, Bandages (<80% HP Threshold)
+-- Smart Sustain: Potions, Stones, Bandages (<75% HP Threshold)
 
 local NurseVersion = "|cff00ff00[Bannion Nurse v10.2 Loaded]|r"
 
@@ -63,8 +63,8 @@ function BannionNurse()
 
     -- 1. COMBAT MODE (Potions & Stones)
     if combat then
-        -- Threshold v10.2: < 80% HP
-        if pct > 80 then return end
+        -- Threshold v10.2: < 75% HP
+        if pct > 75 then return end
         
         -- Priority A: Stones (Free/Shared)
         for _, item in pairs(NurseItems.Stones) do
@@ -114,3 +114,4 @@ loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 loadFrame:SetScript("OnEvent", function() DEFAULT_CHAT_FRAME:AddMessage(NurseVersion) end)
 
 SLASH_BNURSE1 = "/BNurse"; SlashCmdList["BNURSE"] = BannionNurse
+
