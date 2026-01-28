@@ -1,330 +1,123 @@
-BANNION NURSE | STANDALONE MODULE
-
-Version: 1.0
-
-Platform: Turtle WoW (Client 1.12.1)
-
-Author: Bannion \& Gemini
-
-
-
-=========================================================================
-
-
-
-ENGLISH INSTRUCTIONS
-
-
-
-Technical Description
-
-Bannion Nurse is a "Standalone" module (class-independent) dedicated to
-
-Emergency Health Management.
-
-
-
-In the chaos of Vanilla combat, managing separate keybinds for Potions
-
-and different ranks of Bandages can be inefficient. This module acts as
-
-a smart decision engine that evaluates the player's combat state to
-
-determine the appropriate medical response instantly.
-
-
-
-Features
-
-
-
-1\. Combat Awareness:
-
-The engine detects if you are currently affecting combat.
-
-\* IF IN COMBAT: It attempts to use a "Healing Potion" (Instant
-
-health, but consumes potion cooldown).
-
-\* IF OUT OF COMBAT: It switches to First Aid logic to conserve
-
-precious potions.
-
-
-
-
-
-2\. Intelligent Bandage Scan:
-
-Instead of requiring a macro for a specific item, the module scans
-
-your bags (0-4) in real-time. It prioritizes bandages based on
-
-healing density:
-
-1\. Heavy Runecloth
-
-2\. Runecloth
-
-3\. Heavy Mageweave
-
-... down to Linen.
-
-It always selects the best available bandage.
-
-
-
-
-
-3\. Self-Targeting Enforcement:
-
-Bandages require a target. The module automatically targets the
-
-player, applies the bandage, and (if applicable) attempts to restore
-
-the previous target, ensuring fluid gameplay.
-
-
-
-Installation
-
-
-
-1\. Navigate to your game folder: WoW\_Turtle\\Interface\\AddOns\\
-
-2\. Create a folder named: BannionNurse
-
-3\. Place the BannionNurse.toc and BannionNurse.lua files inside that folder.
-
-
-
-Commands
-
-/BNurse (or /BHeal)
-
-This is the trigger command.
-
-
-
-\* You do not need arguments.
-
-\* Just type or bind this command.
-
-
-
-Suggested Macros
-
-The most efficient way to use this is to replace your standard Potion or
-
-Bandage button on your action bar with a macro.
-
-
-
-Macro 1: The Panic Button
-
+# BANNION NURSE | STANDALONE MODULE
+**Automated Emergency Health Management System**
+<a href="https://www.paypal.com/donate/?hosted_button_id=VLAFP6ZT8ATGU">
+  <img src="https://github.com/ThePeregris/MainAssets/blob/main/Donate_PayPal.png" alt="Tips Appreciated!" align="right" width="120" height="75">
+</a>
+* **Version:** 10.2
+* **Platform:** Turtle WoW (Client 1.12.1)
+* **Author:** Bannion & Gemini
+
+---
+
+## 🇬🇧 ENGLISH INSTRUCTIONS
+
+### 1. Technical Description
+Bannion Nurse is a **"Standalone" module** (class-independent) dedicated to Emergency Health Management.
+
+In the chaos of Vanilla combat, managing separate keybinds for Potions and different ranks of Bandages can be inefficient. This module acts as a smart decision engine that evaluates the player's combat state to determine the appropriate medical response instantly.
+
+### 2. Key Features
+* **⚔️ Combat Awareness:**
+    The engine detects if you are currently affecting combat.
+    * **IF IN COMBAT:** Checks if HP < 80%. Uses **Healthstones** (if available) or **Healing Potions**.
+    * **IF OUT OF COMBAT:** Checks if HP < 90%. Switches to **Bandages** to conserve potions.
+
+* **🎒 Intelligent Bag Scan:**
+    Instead of requiring a macro for a specific item, the module scans your bags (0-4) in real-time. It prioritizes items based on quality:
+    1.  Heavy Runecloth
+    2.  Runecloth
+    3.  Heavy Mageweave
+    *(...down to Linen)*
+    *It always selects the best available item found in your inventory.*
+
+* **🛡️ Debuff Safety:**
+    Before applying a bandage, it checks for the "Recently Bandaged" debuff to prevent wasting the action or generating error messages.
+
+### 3. Installation Guide
+1.  Navigate to your game folder: `WoW_Turtle\Interface\AddOns\`
+2.  Create a new folder named: `BannionNurse`
+3.  Place the **BannionNurse.toc** and **BannionNurse.lua** files inside that folder.
+
+### 4. Commands & Usage
+There is only one trigger command. You do not need arguments.
+
+* **Command:** `/BNurse`
+
+### 5. Suggested Macros
+The most efficient way to use this is to replace your standard Potion or Bandage button on your action bar with a macro.
+
+**Macro 1: The Panic Button**
 One button to save your life, regardless of the situation.
-
-
-
+```lua
+/BNurse
 ```
 
-&nbsp; /BNurse
-
-
-
-```
-
-
-
-Macro 2: Class Integration (Example: Rogue)
-
+**Macro 2: Class Integration (Example: Rogue)**
 You can combine it with defensive cooldowns for maximum efficiency.
-
-
-
+```lua
+/cast Evasion
+/BNurse
 ```
 
-&nbsp; /cast Evasion
+### ⚠️ Technical Notes
+* **Potions:** The addon looks for standard naming conventions (e.g., *Major Healing Potion*, *Superior Healing Potion*).
+* **Self-Cast:** Ensure "Auto Self Cast" is enabled in your Interface Options for seamless bandage application while targeting enemies.
 
-&nbsp; /BNurse
+---
 
+## 🇧🇷 INSTRUÇÕES EM PORTUGUÊS (PT-BR)
 
+### 1. Descrição Técnica
+O Bannion Nurse é um módulo "Standalone" (funciona independentemente da classe) dedicado à Gestão de Saúde de Emergência.
 
+No caos do combate Vanilla, gerir atalhos separados para Poções e diferentes ranques de Ligaduras pode ser ineficiente. Este módulo atua como um motor de decisão inteligente que avalia o estado de combate do jogador para determinar a resposta médica apropriada instantaneamente.
+
+### 2. Funcionalidades
+* **⚔️ Consciência de Combate:**
+    O motor detecta se você está atualmente em combate.
+    * **SE EM COMBATE:** Verifica se Vida < 80%. Tenta usar **Healthstones** (se houver) ou **Poções de Cura**.
+    * **SE FORA DE COMBATE:** Verifica se Vida < 90%. Alterna para **Ligaduras (Bandages)** para economizar poções.
+
+* **🎒 Varredura Inteligente:**
+    Em vez de exigir uma macro para um item específico, o módulo escaneia as suas bolsas (0-4) em tempo real. Ele prioriza itens com base na qualidade:
+    1.  Heavy Runecloth
+    2.  Runecloth
+    3.  Heavy Mageweave
+    *(...até Linen)*
+    *Ele seleciona sempre o melhor item disponível no inventário.*
+
+* **🛡️ Segurança de Debuff:**
+    Antes de aplicar uma ligadura, ele verifica se você tem o debuff "Recently Bandaged" (Recentemente Enfaixado) para evitar erros e desperdício de tempo.
+
+### 3. Instalação
+1.  Navegue até a pasta do seu jogo: `WoW_Turtle\Interface\AddOns\`
+2.  Crie uma pasta chamada: `BannionNurse`
+3.  Coloque os ficheiros **BannionNurse.toc** e **BannionNurse.lua** dentro dessa pasta.
+
+### 4. Comandos
+Este é o comando de gatilho. Não precisa de argumentos.
+
+* **Comando:** `/BNurse`
+
+### 5. Macros Sugeridas
+A forma mais eficiente de usar é substituir o seu botão padrão de Poção ou Ligadura na barra de ação por uma macro.
+
+**Macro 1: O Botão de Pânico**
+Um botão para salvar a sua vida, independentemente da situação.
+```lua
+/BNurse
 ```
 
-
-
-Technical Note on Potions
-
-The addon attempts to cast "Healing Potion". Ensure you are carrying
-
-items that match the standard naming conventions (e.g., Major Healing
-
-Potion, Superior Healing Potion) or that the server recognizes the
-
-generic spell call.
-
-
-
-=========================================================================
-
-
-
-INSTRUCOES EM PORTUGUES (PT-BR)
-
-
-
-Descricao Tecnica
-
-O Bannion Nurse e um modulo "Standalone" (funciona independentemente da
-
-classe) dedicado a Gestao de Saude de Emergencia.
-
-
-
-No caos do combate Vanilla, gerir atalhos separados para Pocoes e
-
-diferentes ranques de Ligaduras pode ser ineficiente. Este modulo atua
-
-como um motor de decisao inteligente que avalia o estado de combate do
-
-jogador para determinar a resposta medica apropriada instantaneamente.
-
-
-
-Funcionalidades
-
-
-
-1\. Consciencia de Combate:
-
-O motor detecta se voce esta atualmente em combate.
-
-\* SE EM COMBATE: Tenta usar "Healing Potion" (Vida instantanea, mas
-
-consome o cooldown de pocao).
-
-\* SE FORA DE COMBATE: Alterna para a logica de Primeiros Socorros
-
-para economizar pocoes valiosas.
-
-
-
-
-
-2\. Varredura Inteligente de Ligaduras:
-
-Em vez de exigir uma macro para um item especifico, o modulo escaneia
-
-as suas bolsas (0-4) em tempo real. Ele prioriza ligaduras com base
-
-na densidade de cura:
-
-1\. Heavy Runecloth
-
-2\. Runecloth
-
-3\. Heavy Mageweave
-
-... ate Linen.
-
-Ele seleciona sempre a melhor ligadura disponivel no inventario.
-
-
-
-
-
-3\. Auto-Alvo Forcado:
-
-Ligaduras exigem um alvo. O modulo seleciona automaticamente o
-
-jogador, aplica a ligadura e (se aplicavel) tenta restaurar o alvo
-
-anterior, garantindo uma jogabilidade fluida.
-
-
-
-Instalacao
-
-
-
-1\. Navegue ate a pasta do seu jogo: WoW\_Turtle\\Interface\\AddOns\\
-
-2\. Crie uma pasta chamada: BannionNurse
-
-3\. Coloque os ficheiros BannionNurse.toc e BannionNurse.lua dentro dessa pasta.
-
-
-
-Comandos
-
-/BNurse (ou /BHeal)
-
-Este e o comando de gatilho.
-
-
-
-\* Nao precisa de argumentos.
-
-\* Basta digitar ou criar um atalho para este comando.
-
-
-
-Macros Sugeridas
-
-A forma mais eficiente de usar e substituir o seu botao padrao de Pocao
-
-ou Ligadura na barra de acao por uma macro.
-
-
-
-Macro 1: O Botao de Panico
-
-Um botao para salvar a sua vida, independentemente da situacao.
-
-
-
+**Macro 2: Integração de Classe (Exemplo: Rogue)**
+Você pode combinar com cooldowns defensivos para máxima eficiência.
+```lua
+/cast Evasion
+/BNurse
 ```
 
-&nbsp; /BNurse
+### ⚠️ Notas Técnicas
+* **Poções:** O addon busca itens pelos nomes padrão em inglês (ex: *Major Healing Potion*).
+* **Auto-Cast:** Certifique-se de que a opção "Auto Self Cast" esteja ativada nas Opções de Interface do jogo para aplicar ataduras sem precisar tirar o alvo do inimigo.
 
-
-
-```
-
-
-
-Macro 2: Integracao de Classe (Exemplo: Rogue)
-
-Voce pode combinar com cooldowns defensivos para maxima eficiencia.
-
-
-
-```
-
-&nbsp; /cast Evasion
-
-&nbsp; /BNurse
-
-
-
-```
-
-
-
-Nota Tecnica sobre Pocoes
-
-O addon tenta castar "Healing Potion". Certifique-se de que esta
-
-carregando itens que correspondam as convencoes de nomenclatura padrao
-
-(ex: Major Healing Potion, Superior Healing Potion) ou que o servidor
-
-reconheca a chamada generica do feitico.
-
-
-
-=========================================================================
-
-Bannion Company - Precision is not an option, it's a requirement.
-
+---
+**Bannion Company - Precision is not an option, it's a requirement.**
