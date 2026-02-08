@@ -1,4 +1,4 @@
--- [[ BANNION NURSE v10.2 - MODULE ]]
+-- [[ BANNION NURSE v10.3 - MODULE ]]
 -- Smart Sustain: Potions, Stones, Bandages (<75% HP Threshold)
 
 local NurseVersion = "|cff00ff00[Bannion Nurse v10.2 Loaded]|r"
@@ -19,7 +19,9 @@ local NurseItems = {
     }
 }
 
+-- =========================
 -- Local Helper: Use Item by Name
+-- =========================
 local function Bannion_Nurse_UseItem(name)
     for bag = 0, 4 do
         for slot = 1, GetContainerNumSlots(bag) do
@@ -36,82 +38,119 @@ local function Bannion_Nurse_UseItem(name)
     return false
 end
 
--- Local Helper: Check Spell Ready (Safe version for Nurse)
+-- =========================
+-- Local Helper: Spell Ready
+-- =========================
 local function Bannion_Nurse_SpellReady(spellName)
-    -- Tries to use global Bannion_Ready if available, else falls back to simple check
     if Bannion_Ready then return Bannion_Ready(spellName) end
-    
-    -- Local fallback if Core is missing
-    local id = nil
+
+    local id
     for i = 1, 200 do
         local n = GetSpellName(i, "spell")
         if not n then break end
         if n == spellName then id = i; break end
     end
     if not id then return false end
-    local start, duration = GetSpellCooldown(id, "spell")
+
+    local start = GetSpellCooldown(id, "spell")
     return start == 0
 end
 
+-- =========================
+-- CORE NURSE LOGIC
+-- =========================
 function BannionNurse()
     local hp = UnitHealth("player")
     local max = UnitHealthMax("player")
     local pct = (hp / max) * 100
     local combat = UnitAffectingCombat("player")
-    
+
     UIErrorsFrame:Clear()
 
-    -- 1. COMBAT MODE (Potions & Stones)
+    -- =========================
+    -- COMBAT MODE
+    -- =========================
     if combat then
-        -- Threshold v10.2: < 75% HP
         if pct > 75 then return end
-        
-        -- Priority A: Stones (Free/Shared)
+
+        -- Stones first
         for _, item in pairs(NurseItems.Stones) do
             if Bannion_Nurse_UseItem(item) then return end
         end
 
-        -- Priority B: Potions (Costly)
+        -- Potions second
         for _, item in pairs(NurseItems.Potions) do
             if Bannion_Nurse_UseItem(item) then return end
         end
-        
-        -- Priority C: Racial
+
+        -- Undead racial
         local race = UnitRace("player")
         if race == "Undead" and pct < 40 then
             if Bannion_Nurse_SpellReady("Cannibalize") then
                 CastSpellByName("Cannibalize")
             end
         end
-        
-    -- 2. REST MODE (Bandages)
+
+    -- =========================
+    -- REST MODE
+    -- =========================
     else
-        -- Don't waste if nearly full
         if pct > 90 then return end
-        
-        -- Check Debuff
-        for i=1,16 do 
-            local t = UnitDebuff("player", i)
-            if t and string.find(t, "Bandage") then 
+
+        -- Bandage debuff check
+        for i = 1, 16 do
+            local debuff = UnitDebuff("player", i)
+            if debuff and string.find(debuff, "Bandage") then
                 DEFAULT_CHAT_FRAME:AddMessage("|cffff0000[Nurse]|r Cannot Bandage: Debuff Active!")
-                return 
-            end 
+                return
+            end
         end
-        
-        -- Apply Bandage
+
+        -- Apply best bandage
         for _, item in pairs(NurseItems.Bandages) do
-            if Bannion_Nurse_UseItem(item) then 
+            if Bannion_Nurse_UseItem(item) then
                 DEFAULT_CHAT_FRAME:AddMessage("|cff00ff00[Nurse]|r Applying " .. item .. "...")
-                return 
+                return
             end
         end
     end
 end
 
--- Init Message
+-- =========================
+-- [MOD:SHIFT] FIRST AID OVERRIDE
+-- =========================
+do
+    local _BannionNurse = BannionNurse
+
+    function BannionNurse()
+        if IsShiftKeyDown() then
+            if UnitAffectingCombat("player") then return end
+
+            -- Prevent bandage lockout
+            for i = 1, 16 do
+                local debuff = UnitDebuff("player", i)
+                if debuff and string.find(debuff, "Bandage") then
+                    DEFAULT_CHAT_FRAME:AddMessage("|cffff0000[Nurse]|r First Aid blocked (Bandage debuff).")
+                    return
+                end
+            end
+
+            CastSpellByName("First Aid")
+            return
+        end
+
+        _BannionNurse()
+    end
+end
+
+-- =========================
+-- INIT & SLASH
+-- =========================
 local loadFrame = CreateFrame("Frame")
 loadFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
-loadFrame:SetScript("OnEvent", function() DEFAULT_CHAT_FRAME:AddMessage(NurseVersion) end)
+loadFrame:SetScript("OnEvent", function()
+    DEFAULT_CHAT_FRAME:AddMessage(NurseVersion)
+end)
 
-SLASH_BNURSE1 = "/BNurse"; SlashCmdList["BNURSE"] = BannionNurse
-
+SLASH_BNURSE1 = "/bnurse"
+SlashCmdList["BNURSE"] = BannionNurse
