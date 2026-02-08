@@ -117,13 +117,13 @@ function BannionNurse()
 end
 
 -- =========================
--- [MOD:SHIFT] FIRST AID OVERRIDE
+-- [MOD:ALT] FIRST AID OVERRIDE
 -- =========================
 do
     local _BannionNurse = BannionNurse
 
     function BannionNurse()
-        if IsShiftKeyDown() then
+        if IsAltKeyDown() then
             if UnitAffectingCombat("player") then return end
 
             -- Prevent bandage lockout
@@ -154,3 +154,4 @@ end)
 
 SLASH_BNURSE1 = "/bnurse"
 SlashCmdList["BNURSE"] = BannionNurse
+
