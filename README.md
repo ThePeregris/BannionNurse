@@ -42,6 +42,7 @@ In the chaos of Vanilla combat, managing separate keybinds for Potions and diffe
 There is only one trigger command. You do not need arguments.
 
 * **Command:** `/BNurse`
+* **Command:** ALT + Key : Open First Aid Panel
 
 ### 5. Suggested Macros
 The most efficient way to use this is to replace your standard Potion or Bandage button on your action bar with a macro.
@@ -51,8 +52,6 @@ One button to save your life, regardless of the situation.
 ```lua
 /BNurse
 ```
-
-'Shift' + key = Open Skill Panel First Aid
 
 **Macro 2: Class Integration (Example: Rogue)**
 You can combine it with defensive cooldowns for maximum efficiency.
@@ -123,4 +122,5 @@ Você pode combinar com cooldowns defensivos para máxima eficiência.
 
 ---
 **Bannion Company - Precision is not an option, it's a requirement.**
+
 
