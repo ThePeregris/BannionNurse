@@ -1,7 +1,8 @@
 ## Interface: 11200
 ## Title: [|cff00ccffB|r]annion Nurse |cffff0000First Aid|r
 ## Notes: Smart Potion & Bandage Manager (Combat Aware).
-## Author: Bannion & Gemini
-## Version: 10.2
+## Author: Bannion
+## Version: 10.3
 
 BannionNurse.lua
+
