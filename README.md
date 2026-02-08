@@ -3,7 +3,7 @@
 <a href="https://www.paypal.com/donate/?hosted_button_id=VLAFP6ZT8ATGU">
   <img src="https://github.com/ThePeregris/MainAssets/blob/main/Donate_PayPal.png" alt="Tips Appreciated!" align="right" width="120" height="75">
 </a>
-* **Version:** 10.2
+* **Version:** 10.3
 * **Platform:** Turtle WoW (Client 1.12.1)
 * **Author:** Bannion & Gemini
 
@@ -51,6 +51,8 @@ One button to save your life, regardless of the situation.
 ```lua
 /BNurse
 ```
+
+'Shift' + key = Open Skill Panel First Aid
 
 **Macro 2: Class Integration (Example: Rogue)**
 You can combine it with defensive cooldowns for maximum efficiency.
@@ -121,3 +123,4 @@ Você pode combinar com cooldowns defensivos para máxima eficiência.
 
 ---
 **Bannion Company - Precision is not an option, it's a requirement.**
+
